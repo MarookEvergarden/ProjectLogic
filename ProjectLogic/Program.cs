@@ -16,9 +16,12 @@ namespace Project
 
             for (int i = 0; i < timeSlots.Count; i++) 
             {
-                if (timeSlots[i].StartHour <= hour && hour < timeSlots[i].EndHour) 
+                if (timeSlots[i].StartHour <= hour && hour <= timeSlots[i].EndHour) 
                 {
-                    return timeSlots[i].Show;
+                    if (timeSlots[i].StartMinute <= minute && minute < timeSlots[i].EndMinute || timeSlots[i].StartMinute <= minute && timeSlots[i].EndMinute == 0)
+                    {
+                        return timeSlots[i].Show;
+                    }
                 }                
             }
             return null;
@@ -38,8 +41,8 @@ namespace Project
             this.show = show;
             this.startHour = startHour; 
             this.startMinute = startMinute; 
-            this.endHour = endHour; 
-            this.endMinute = endMinute; 
+            this.endHour = endHour;
+            if (endMinute == 0) { this.endMinute = 0; } else { this.endMinute = endMinute - 1; }
         }
 
         public int StartMinute { get => startMinute; }
@@ -97,7 +100,7 @@ namespace Project
             else { Console.WriteLine("At 11 shows name is - " + show.Name); }
 
 
-            schedule.FindShowForTime(12, 40);
+            show = schedule.FindShowForTime(12, 40);
 
             if (show == null)
             {
