@@ -13,10 +13,16 @@ namespace Project
 
         public Show FindShowForTime(int hour, int minute) 
         {
+            if (minute == 59)
+            {
+                hour += 1;
+                minute = 0;
+            }
 
             for (int i = 0; i < timeSlots.Count; i++) 
             {
-                if (timeSlots[i].StartHour <= hour && hour <= timeSlots[i].EndHour) 
+               
+                if (timeSlots[i].StartHour <= hour && hour < timeSlots[i].EndHour) 
                 {
                     if (timeSlots[i].StartMinute <= minute && minute < timeSlots[i].EndMinute || timeSlots[i].StartMinute <= minute && timeSlots[i].EndMinute == 0)
                     {
@@ -37,12 +43,13 @@ namespace Project
         private Show show;
 
         public TvTimeSlot(Show show, int startHour, int startMinute, int endHour, int endMinute)
-        {            
+        {
+            if (endMinute == 0) { this.endMinute = 59; this.endHour = endHour - 1; } else { this.endMinute = endMinute - 1; }
             this.show = show;
             this.startHour = startHour; 
             this.startMinute = startMinute; 
             this.endHour = endHour;
-            if (endMinute == 0) { this.endMinute = 0; } else { this.endMinute = endMinute - 1; }
+            
         }
 
         public int StartMinute { get => startMinute; }
@@ -91,16 +98,16 @@ namespace Project
                 new TvTimeSlot(new Show("F1"), 12, 30, 15, 00)
             };
             TvSchedule schedule = new TvSchedule(timeSlots);
-            Show show = schedule.FindShowForTime(12, 20);                        
+           /* Show show = schedule.FindShowForTime(12, 20);                        
             
             if (show == null) 
             {
                 Console.WriteLine("ooops there is no show at this time");
             }
-            else { Console.WriteLine("At 11 shows name is - " + show.Name); }
+            else { Console.WriteLine("At 11 shows name is - " + show.Name); }*/
 
 
-            show = schedule.FindShowForTime(12, 40);
+           Show show = schedule.FindShowForTime(10, 59);
 
             if (show == null)
             {
