@@ -1,4 +1,5 @@
-﻿namespace BusinessLogic
+﻿using System.IO;
+namespace BusinessLogic
 {
     public class TvSchedule
     {
@@ -12,6 +13,21 @@
             this.Slots = Slots;
         }
 
+        public void SaveToFile(String filepath)
+        {
+           /* String NewLine = String.Join("\n", Slots);
+            System.IO.File.WriteAllText(filepath, NewLine);*/
+           using(StreamWriter tw = new StreamWriter(filepath)) 
+            {
+                //tw.WriteLine(string.Format("{0},{1}",StartHour, StartMinutes));
+                tw.WriteLine(GetStartHour.ToString() + "," + GetStartMinutes.ToString());
+                foreach (TvSlot slot in Slots) 
+                {
+                    tw.WriteLine(slot.GetName + "," + slot.GetTime);
+                }
+            }
+        }
+
         public TvSchedule(List<TvSlot> Slots, double StartHour, double StartMinutes)
         {
             this.Slots = Slots;
@@ -23,30 +39,26 @@
         public double GetStartMinutes { get => StartMinutes; }
 
         public TvSlot FindShow(double FindHour, double FindMinute) 
-        {
-            if(FindHour < StartHour) 
+        {            
+            double FindinThisMinute = FindHour * 60 + FindMinute;
+            double ScheduleStartsMinute = GetStartHour * 60 + GetStartMinutes;
+            double SearchTime = FindinThisMinute - ScheduleStartsMinute;
+            double TimeCounter = 0;
+            
+            if (SearchTime < 0) return null;
+
+            foreach (TvSlot slot in Slots)
             {
-                return null;
-            }
-            else { 
-                double FindinThisMinute = FindHour * 60 + FindMinute;
-                double StartHour = GetStartHour * 60 + GetStartMinutes;
-                double SearchTime = FindinThisMinute - StartHour;
-                double TimeCounter = 0;
-
-                for (int i = 0; i < Slots.Count;i++) 
+                if (SearchTime <= TimeCounter + slot.GetTime)
                 {
-                   if( SearchTime <= TimeCounter + Slots[i].GetTime) 
-                    {
-                        return Slots[i];
-                    }
-                
+                    return slot;
                 }
+                TimeCounter += slot.GetTime;
             }
 
-
-            return null;
+            return null;            
         }
+     
     }
 
     public class TvSlot

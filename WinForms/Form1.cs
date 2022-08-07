@@ -20,8 +20,8 @@ namespace WinForms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Show show = new Show("Dexter");
-            MessageBox.Show(show.Name);
+            
+            MessageBox.Show("Hello");
         }
     }
 }

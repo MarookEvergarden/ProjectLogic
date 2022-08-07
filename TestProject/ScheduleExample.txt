@@ -1,0 +1,4 @@
+﻿9,0
+Dexter,140
+Picky Blinders,200
+F1,120
