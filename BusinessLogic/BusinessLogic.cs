@@ -5,8 +5,8 @@ namespace BusinessLogic
     {
         private List<TvSlot> Slots;
 
-        private double StartHour;
-        private double StartMinutes;
+        public double StartHour;
+        public double StartMinutes;
 
         public TvSchedule(List<TvSlot> Slots)
         {
@@ -86,8 +86,30 @@ namespace BusinessLogic
             return ((file1byte - file2byte) == 0);
         }
 
+        public void ReadScheduleFromFile(string file, List<TvSlot> tvSlots) 
+        {
+            List<string> lines = new List<string>();
+
+            lines = File.ReadAllLines(file).ToList();
+
+            for (int i = 0; i < lines.Count;i++) 
+            {
+                string[] parts = lines[i].Split(',');
+                if (i == 0) 
+                {
+                    StartHour = Convert.ToDouble(parts[i]);
+                    StartMinutes = Convert.ToDouble(parts[i+1]);                  
+                    continue;
+                }
+                TvSlot tv = new TvSlot(parts[0], Convert.ToDouble(parts[1]));
+                tvSlots.Add(tv);
+            }
+           
+        }
+
         public TvSchedule(List<TvSlot> Slots, double StartHour, double StartMinutes)
         {
+
             this.Slots = Slots;
             this.StartMinutes = StartMinutes;
             this.StartHour = StartHour;
@@ -96,6 +118,12 @@ namespace BusinessLogic
         public double GetStartHour { get =>  StartHour; }
         public double GetStartMinutes { get => StartMinutes; }
 
+
+        public TvSchedule(List<TvSlot> Slots, String filepath)
+        {
+            ReadScheduleFromFile(filepath, Slots);
+            this.Slots = Slots;
+        }
         public TvSlot FindShow(double FindHour, double FindMinute) 
         {            
             double FindinThisMinute = FindHour * 60 + FindMinute;
