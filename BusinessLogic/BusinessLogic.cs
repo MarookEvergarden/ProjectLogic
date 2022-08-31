@@ -88,6 +88,10 @@ namespace BusinessLogic
 
         public void ReadScheduleFromFile(string file, List<TvSlot> tvSlots) 
         {
+            if (!File.Exists(file))
+            {
+                File.Create(file);
+            }
             List<string> lines = new List<string>();
 
             lines = File.ReadAllLines(file).ToList();
