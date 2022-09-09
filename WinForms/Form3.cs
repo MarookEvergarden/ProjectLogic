@@ -98,6 +98,12 @@ namespace WinForms
         {
             Application.Exit();
         }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Form4 form4 = new Form4();
+            form4.Show();
+        }
     }
 }
 
