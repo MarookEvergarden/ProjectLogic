@@ -1,6 +1,7 @@
 using BusinessLogic;
 using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
+using System.Security.Cryptography.X509Certificates;
 
 namespace WinForms
 {
@@ -10,11 +11,19 @@ namespace WinForms
         public MediaPlayer _mp;
         public Media media;
 
+        private TvSchedule schedule;
+
         public bool isFullscreen = false;
         public bool isPlaying = false;
         public Size oldVideoSize;
         public Size oldFormSize;
         public Point oldVideoLocation;
+
+        private static string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+        private readonly string FileSafe = System.IO.Path.Combine(CurrentDirectory, @"Schedule.txt");
+
+
 
         public Form1()
         {
@@ -32,6 +41,11 @@ namespace WinForms
             _mp = new MediaPlayer(_libVLC);
 
             videoView1.MediaPlayer = _mp;
+            
+
+          
+
+            
 
         }
 

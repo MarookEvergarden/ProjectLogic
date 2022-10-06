@@ -5,31 +5,37 @@ namespace BusinessLogic
     {
         private List<TvSlot> Slots;
 
-        public double StartHour;
-        public double StartMinutes;
+        private double StartHour;
+        private double StartMinutes;
+        private string Filepath;
 
         public TvSchedule(List<TvSlot> Slots)
         {
             this.Slots = Slots;
+        }
+        public TvSchedule()
+        {
+
         }
 
         public void SaveToFile(String filepath)
         {
             if (File.Exists(filepath))
             {
-                File.Delete(filepath);       
+                File.Delete(filepath);
             }
 
 
-           /* String NewLine = String.Join("\n", Slots);
-            System.IO.File.WriteAllText(filepath, NewLine);*/
-           using(StreamWriter tw = File.CreateText(filepath)) 
-            {
-                //tw.WriteLine(string.Format("{0},{1}",StartHour, StartMinutes));
-                tw.WriteLine(GetStartHour.ToString() + "," + GetStartMinutes.ToString());
-                foreach (TvSlot slot in Slots) 
+       
+      
+            SetFilepath(filepath);
+            using (StreamWriter tw = File.CreateText(filepath))
+            {                                       
+                tw.WriteLine(GetStartHour.ToString() + "," + GetStartMinutes.ToString() + "," + GetFilepath);
+
+                foreach (TvSlot slot in Slots)
                 {
-                    tw.WriteLine(slot.GetName + "," + slot.GetTime);
+                    tw.WriteLine(slot.GetName + "," + slot.GetTime + "," + slot.GetPath);
                 }
             }
         }
@@ -102,25 +108,79 @@ namespace BusinessLogic
                 if (i == 0) 
                 {
                     StartHour = Convert.ToDouble(parts[i]);
-                    StartMinutes = Convert.ToDouble(parts[i+1]);                  
+                    StartMinutes = Convert.ToDouble(parts[i+1]);  
+                    Filepath = parts[i+2];
                     continue;
                 }
-                TvSlot tv = new TvSlot(parts[0], Convert.ToDouble(parts[1]));
+                TvSlot tv = new TvSlot(parts[0], Convert.ToDouble(parts[1]),file);
                 tvSlots.Add(tv);
             }
            
         }
+        public bool FolderIsExist(string path)
+        {
+            if (File.Exists(path))
+            {
 
-        public TvSchedule(List<TvSlot> Slots, double StartHour, double StartMinutes)
+                return true;
+            }
+            return false;
+          
+        }
+
+        public string ReturnRandomFile(string path) 
+        {
+            var di = new DirectoryInfo(path);
+
+            var rgFolders = di.GetDirectories();
+
+            var rand = new Random();
+            
+            var folder = rgFolders.ElementAt(rand.Next(rgFolders.Count())).FullName;
+
+
+            var di2 = new DirectoryInfo(folder);
+
+            var files = di2.GetFiles();
+
+            string file = files.ElementAt(rand.Next(0, files.Count())).FullName;
+
+            return file;                
+        }
+
+        public void Synchronization(string folderPath, List<TvSlot> tvSlots) 
+        {
+           /* var di = new DirectoryInfo(folderPath);
+
+            foreach(TvSlot tv in tvSlots) 
+            {
+                string name = tv.GetName;
+                var show = di.GetFiles(name);
+
+                if (show == null) 
+                {
+                    string creatFolder = 
+                    System.IO.Directory.CreateDirectory(folderPath, name);
+                }
+
+            }*/
+        }
+
+        public TvSchedule(List<TvSlot> Slots, double StartHour, double StartMinutes, string Filepath)
         {
 
             this.Slots = Slots;
             this.StartMinutes = StartMinutes;
             this.StartHour = StartHour;
+            this.Filepath = Filepath; 
         }
 
         public double GetStartHour { get =>  StartHour; }
+        public double SetStartHour { set => StartHour = value; }
         public double GetStartMinutes { get => StartMinutes; }
+        public double SetStartMinutes { set => StartMinutes = value; }
+        public string GetFilepath { get => Filepath; }
+        public void SetFilepath(string path) { Filepath = path; }
 
 
         public TvSchedule(List<TvSlot> Slots, String filepath)
@@ -155,30 +215,27 @@ namespace BusinessLogic
     {
         private string Name;
         private double Time;
+        private string Path;
 
-        public TvSlot(string Name, double Time)
+        public TvSlot(string Name, double Time, string Path)
         {
             this.Name = Name;
             this.Time = Time;
+            this.Path = System.IO.Path.Combine(Path,Name); 
         }
+       // public TvSlot() { ; }
 
 
         public string GetName { get => Name; }
+        public void SetName(string Name) { this.Name = Name; }
+
         public double GetTime { get => Time; }
+        public void SetTime (double Time) { this.Time = Time; }
+
+        public string GetPath { get => Path; }
+        public void SetPath(string Path) { this.Path = Path; }
+
     }
-
-   /* public class TvPlayer
-    {
-        private TvSchedule schedule;
-
-        public TvPlayer(TvSchedule schedule)
-        {
-            this.schedule = schedule;
-        }
-
-
-
-    }*/
 
 }
         
