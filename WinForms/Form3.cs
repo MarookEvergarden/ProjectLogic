@@ -20,7 +20,8 @@ namespace WinForms
 
         private static string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         private readonly string FileSafe = System.IO.Path.Combine(CurrentDirectory, @"Schedule.txt");
-
+/*        private readonly string TvFiles = System.IO.Path.Combine(CurrentDirectory, @"tv");
+*/
         public Form3()
         {
             InitializeComponent();
@@ -34,12 +35,13 @@ namespace WinForms
             timeSlots = new List<TvSlot>();
             schedule = new TvSchedule(timeSlots, FileSafe);
 
-            int getStartHour = Convert.ToInt32(schedule.StartHour);
+            int getStartHour = Convert.ToInt32(schedule.GetStartHour);
             int getStartMinutes = Convert.ToInt32(schedule.GetStartMinutes);
 
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
             dateTimePicker1.CustomFormat = "HH:mm";
             dateTimePicker1.ShowUpDown = true;
+
 
 
 
@@ -89,8 +91,8 @@ namespace WinForms
 
         private void button3_Click(object sender, EventArgs e)
         {
-            schedule.StartHour = Convert.ToDouble(dateTimePicker1.Value.Hour);
-            schedule.StartMinutes = Convert.ToDouble(dateTimePicker1.Value.Minute);
+            schedule.SetStartHour = Convert.ToDouble(dateTimePicker1.Value.Hour);
+            schedule.SetStartMinutes = Convert.ToDouble(dateTimePicker1.Value.Minute);
             schedule.SaveToFile(FileSafe);
         }
 
